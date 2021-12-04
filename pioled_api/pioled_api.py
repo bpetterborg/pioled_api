@@ -1,14 +1,14 @@
 #
 #	PiOLED API
-#	- Websockets API for PiOLED screens
+#	- RESTful API for PiOLED screens
 #
 #
 
 
 # very many imports
+from flask import Flask, request				# api stuff
+from flask_restful import Resource, Api
 
-import asyncio			# Asynchronous I/O
-import websockets		# Websockets
 import json				# reading config
 from time import sleep
 
@@ -26,6 +26,11 @@ resX = config['resX']
 resY = config['resY']
 	
 font = ImageFont.load_default() # eventally change this read from the config
+
+# flask
+app = Flask(__name__)
+api = Api(app)
+
 
 # gpio stuff
 rst = None	# unused pin
@@ -55,26 +60,23 @@ bottom = height - padding
 
 x = 0	# start at the left
 
+# just api things <4
+class ClearScreen(Resource):
+	# clears the screen	
+	def post(self):
+		draw.rectangle((0,0,width,height), outline=0, fill=0)
+		return {'message': 'cleared'}
 
-# some functions
-	
-def __init__(self) -> None:
+class WriteText(Resource):
+	# writes text to the screen
+	def post(self):
 		pass
+		
+# you need to make the mappings for the paths
+api.add_resource(ClearScreen, '/clear')
+api.add_resource(WriteText, '/write')
 
-async def ping(websocket):
-	await websocket.send("pong")
+# make app go brr
+if __name__ == '__main__':
+	app.run(port='5002')
 
-async def write(websocket, text):
-	pass
-
-async def clear(websocket):
-	pass
-
-# i think this is correct??
-
-
-server = websockets.serve(write, "localhost", 8765)
-listener = websockets.listen("localhost", 8765)			#  unsure if this is needed, will keep it for now.
-
-asyncio.get_event_loop().run_until_complete(server)
-asyncio.get_event_loop().run_forever()
