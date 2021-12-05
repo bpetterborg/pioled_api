@@ -12,7 +12,7 @@ from flask_restful import Resource, Api
 import json				# reading config
 from time import sleep
 
-import Adafruit_GPIO.SPI as SPI	
+import Adafruit_GPIO.SPI as SPI
 import adafruit_ssd1306							# piOLED
 
 from PIL import Image, ImageDraw, ImageFont		# fonts and pictures
@@ -67,14 +67,27 @@ class ClearScreen(Resource):
 		draw.rectangle((0,0,width,height), outline=0, fill=0)
 		return {'message': 'cleared'}
 
-class WriteText(Resource):
+class DrawText(Resource):
 	# writes text to the screen
-	def post(self):
+	def post(self, text, x, y):
+		self.text = text
+		self.x = x
+		self.y
+		draw.text((self.x, self.y), self.text,  font=font, fill=255)
+
+class DrawImage(Resource):
+	# draw stuff on screen
+	def post(self, image, x, y):
+		self.image = image
+		self.x = x
+		self.y = y
 		pass
 		
 # you need to make the mappings for the paths
 api.add_resource(ClearScreen, '/clear')
-api.add_resource(WriteText, '/write')
+api.add_resource(DrawText, '/write')
+api.add_resource(DrawImage, '/draw')
+
 
 # make app go brr
 if __name__ == '__main__':
