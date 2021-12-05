@@ -82,14 +82,18 @@ class DrawImage(Resource):
 		self.x = x
 		self.y = y
 		pass
-		
+
+class Run(Resource):
+	def post(self):
+		display.image(image)
+		display.display()
+
+
 # you need to make the mappings for the paths
 api.add_resource(ClearScreen, '/clear')
 api.add_resource(DrawText, '/write')
 api.add_resource(DrawImage, '/draw')
 
-
 # make app go brr
 if __name__ == '__main__':
 	app.run(port='5002')
-
